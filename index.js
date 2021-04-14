@@ -40,22 +40,6 @@ const sortArrArgs = (arr) => {
   return newArr;
 };
 
-/**
- * Bot triggers that don't require to called command
- * @param {object} msg Discord message object
- */
-const includeResponses = (msg) => {
-  const msgContent = msg.content.toLowerCase();
-
-  if (msgContent.includes("raid")) {
-    if (msg.author.username === "Cakey") {
-      msg.channel.send(
-        "https://cdn.discordapp.com/attachments/453953489933041686/824316792369184838/RaidRaidRaid.gif"
-      );
-    }
-  }
-};
-
 client.once("ready", () => {
   console.log("Back online");
 });
@@ -65,21 +49,30 @@ client.on("message", (msg) => {
   if (msg.author.bot) return;
 
   /* If you want to set a prefix, can so so here */
-  if (!msg.content.startsWith(botPrefix)) {
-    includeResponses(msg);
-    return;
-  }
+  const hasPrefix = msg.content.startsWith(botPrefix);
 
   /* Retrieve and format user message */
-  let args = msg.content.slice(botPrefix.length).trim().split(/ +/);
+  let args = hasPrefix ? msg.content.slice(botPrefix.length).trim().split(/ +/) : msg.content.split(/ +/);
   let commandName = args.shift().toLowerCase();
 
-  /* Find the called command */
-  const command =
+  
+  let command;
+  if(hasPrefix){
+    command =
     client.commands.get(commandName) ||
     client.commands.find(
       (cmd) => cmd.aliases && cmd.aliases.includes(commandName)
     );
+  } else {
+    let checkArr = client.commands.map(u => u.name);
+    for(let i = 0; i < checkArr.length; i++){
+      console.log(msg.content, checkArr[i]);
+      if(msg.content.toLowerCase().includes(checkArr[i])){
+        command = client.commands.get(checkArr[i])
+        if(command.isBotPrefixRequired) command = null;
+      }
+    }
+  }
 
   /* Exit if command does not exist */
   if (!command) return;
@@ -93,9 +86,16 @@ client.on("message", (msg) => {
   }
 
   /* Attempt to run the command */
-  try {
+  try 
+  {
+    if(command.clientRequired)
+    {
+      args.unshift(client);
+    }
     command.execute(msg, args);
-  } catch (error) {
+  } 
+  catch (error) 
+  {
     console.error(error);
     msg.reply("there was an error trying to execute that command!");
   }

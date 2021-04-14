@@ -2,6 +2,7 @@ const { MessageEmbed } = require("discord.js");
 
 module.exports = {
   name: "ping",
+  isBotPrefixRequired: true,
   description: "Determine bot latency",
   usage: "",
   clientRequired: true,
@@ -19,5 +20,6 @@ module.exports = {
     );
 
     msg.channel.send(pongMsg);
+    
   },
 };
