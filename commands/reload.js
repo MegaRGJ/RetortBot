@@ -2,6 +2,7 @@
 module.exports = {
   name: 'reload',
   description: 'Reloads a command',
+  aliases: ["reload"],
   permissions: ['ADMIN'],
   execute(message, args) {
     if (!args.length) {

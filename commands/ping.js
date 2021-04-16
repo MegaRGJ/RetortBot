@@ -4,6 +4,7 @@ module.exports = {
   name: "ping",
   isBotPrefixRequired: true,
   description: "Determine bot latency",
+  aliases: ["ping"],
   usage: "",
   clientRequired: true,
   execute(msg, args) {

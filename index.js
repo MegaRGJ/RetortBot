@@ -7,6 +7,7 @@ const botPrefix = "-";
 /* Intialise the client commands object to a new discord collection */
 client.commands = new Discord.Collection();
 
+
 /* Read all command files from the command folder! */
 const commandFiles = fs
   .readdirSync("./commands")
@@ -56,20 +57,35 @@ client.on("message", (msg) => {
   let commandName = args.shift().toLowerCase();
 
   
-  let command;
-  if(hasPrefix){
-    command =
-    client.commands.get(commandName) ||
-    client.commands.find(
-      (cmd) => cmd.aliases && cmd.aliases.includes(commandName)
-    );
-  } else {
-    let checkArr = client.commands.map(u => u.name);
-    for(let i = 0; i < checkArr.length; i++){
-      console.log(msg.content, checkArr[i]);
-      if(msg.content.toLowerCase().includes(checkArr[i])){
-        command = client.commands.get(checkArr[i])
-        if(command.isBotPrefixRequired) command = null;
+  let command = null;
+  if(hasPrefix)
+  {
+    command = client.commands.get(commandName) || client.commands.find((cmd) => cmd.aliases && cmd.aliases.includes(commandName));
+  } 
+  else 
+  {
+    // Can cache this data, but I would need to rebuild it after a reload. @todo
+    let CommandDataArr = client.commands.array();
+
+    for(let i = 0; i < CommandDataArr.length; i++)
+    {
+      if(CommandDataArr[i].isBotPrefixRequired)
+      {
+        continue;
+      }
+
+      for(let j = 0; j < CommandDataArr[i].aliases.length; j++)
+      {
+        if(msg.content.toLowerCase().includes(CommandDataArr[i].aliases[j]))
+        {
+          command = client.commands.get(CommandDataArr[i].name);
+          break;
+        }
+      }
+
+      if (command)
+      {
+          break;
       }
     }
   }
