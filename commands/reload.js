@@ -1,6 +1,7 @@
 
 module.exports = {
   name: 'reload',
+  isBotPrefixRequired: true,
   description: 'Reloads a command',
   aliases: ["reload"],
   permissions: ['ADMIN'],

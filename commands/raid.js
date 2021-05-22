@@ -6,7 +6,7 @@ module.exports = {
   usage: "",
   clientRequired: true,
   execute(msg, args) {
-    if(msg.author.username === "Mega"){
+    if(msg.author.username === "Cakey"){
       msg.channel.send(
         "https://cdn.discordapp.com/attachments/453953489933041686/824316792369184838/RaidRaidRaid.gif"
       );
