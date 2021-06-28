@@ -2,7 +2,7 @@ module.exports = {
   name: "raid",
   isBotPrefixRequired: false,
   description: "Raid command",
-  aliases: [" raiding", " raid"],
+  aliases: ["raiding", "raid"],
   usage: "",
   clientRequired: true,
   execute(msg, args) {
